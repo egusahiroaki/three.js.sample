@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>入門</title>	
+</head>
+<body>
+<script src="build/three.min.js"></script>
+<script>
+var main = function(){
+  // カメラを作る
+  var scene =  new THREE.Scene();
+
+  var width = 600;
+  var height = 400;
+  var fov = 60; // 画角
+  var aspect = width/height;
+  var near = 1; // ニアークリップの距離。これより近い領域は表示されない。
+  var far = 1000; // ファークリップの距離。これより遠い領域は表示されない
+  var camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
+  camera.position.set(0,0,50);
+
+  // レンダラーをDOM上に設置
+  var renderer = new THREE.WebGLRenderer();
+  renderer.setSize(width, height);
+  document.body.appendChild(renderer.domElement);
+
+  // 光源の追加
+  var directionalLight = new THREE.DirectionalLight( 0xffffff );
+  directionalLight.position.set( 0, 0, 0.1 );
+  scene.add(directionalLight);
+
+  // 物体の追加。ジオメトリ（形状）とマテリアル（表面素材）からメッシュ（物体を作成する）
+  var geometry = new THREE.CubeGeometry( 10, 10, 10 );
+  var material = new THREE.MeshPhongMaterial( { color: 0xff0000 } );
+  var mesh = new THREE.Mesh( geometry, material );
+  scene.add( mesh );
+
+  // 補助軸の表示
+  var axis = new THREE.AxisHelper(1000);
+  scene.add(axis);
+
+  // 表示する
+  // renderer.render(scene, camera);
+
+  (function renderLoop(){
+    requestAnimationFrame(renderLoop);
+    mesh.rotation.set(
+      0,
+      mesh.rotation.y + 0.01,
+      mesh.rotation.x + 0.01,
+    );
+    renderer.render(scene, camera);
+  })();
+}
+
+window.addEventListener('DOMContentLoaded', main, false);
+</script>
+
+</body>
+</html>
